@@ -28,20 +28,26 @@ def generate_point_with_margin(base_point, **kwargs):
     if "x" in kwargs:
         margin = kwargs["x"]
         x = random.uniform(x - margin, x + margin)
+        x = round(x, 5)  # Round to 5 decimal places
     if "y" in kwargs:
         margin = kwargs["y"]
         y = random.uniform(y - margin, y + margin)
+        y = round(y, 5)
     if "z" in kwargs:
         margin = kwargs["z"]
         z = random.uniform(z - margin, z + margin)
+        z = round(z, 5)
     if "w" in kwargs:
         margin = kwargs["w"]
         w = random.uniform(w - margin, w + margin)
+        w = round(w, 5)
     if "p" in kwargs:
         margin = kwargs["p"]
         p = random.uniform(p - margin, p + margin)
+        p = round(p, 5)
     if "r" in kwargs:
         margin = kwargs["r"]
         r = random.uniform(r - margin, r + margin)
+        r = round(r, 5)
     
     return CartesianPoint(x, y, z, w, p, r)

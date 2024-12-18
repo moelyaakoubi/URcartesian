@@ -16,13 +16,13 @@ points=[point1,point2,point3,point4,point5,point6,point7,point8]
 #nombre de trajectoires
 for i in range(6):
     print(f"trajectoire {i+1}:")
-    print(f"Point1: {CartesianPoint_class.generate_point_with_margin( point1, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point2: {CartesianPoint_class.generate_point_with_margin( point2, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point3: {CartesianPoint_class.generate_point_with_margin( point3, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point4: {CartesianPoint_class.generate_point_with_margin( point4, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point5: {CartesianPoint_class.generate_point_with_margin( point5, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point6: {CartesianPoint_class.generate_point_with_margin( point6, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point7: {CartesianPoint_class.generate_point_with_margin( point7, x=5, y=5, z=5, w=5, p=5, r=5)}")
-    print(f"Point8: {CartesianPoint_class.generate_point_with_margin( point8, x=5, y=5, z=5, w=5, p=5, r=5)}")
+    print(f"Point1: {CartesianPoint_class.generate_point_with_margin( point1, x=0.001, y=0.001, z=0.001)}")
+    print(f"Point2: {CartesianPoint_class.generate_point_with_margin( point2,  z=0.001)}")
+    print(f"Point3: {CartesianPoint_class.generate_point_with_margin( point3)}")
+    print(f"Point4: {CartesianPoint_class.generate_point_with_margin( point4, z=0.001)}")
+    print(f"Point5: {CartesianPoint_class.generate_point_with_margin( point5, x=0.001, y=0.001, z=0.001)}")
+    print(f"Point6: {CartesianPoint_class.generate_point_with_margin( point6, z=0.001)}")
+    print(f"Point7: {CartesianPoint_class.generate_point_with_margin( point7)}")
+    print(f"Point8: {CartesianPoint_class.generate_point_with_margin( point8, z=0.001)}")
 
 

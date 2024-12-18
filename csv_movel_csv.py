@@ -44,6 +44,7 @@ def log_data_values(rtde_r, log_writer):
     joint_speeds = rtde_r.getActualQd()  # Joint velocities
     forces = rtde_r.getActualTCPForce()  # TCP forces
     current = rtde_r.getRobotCurrent()  # Robot's current consumption in amperes
+    #toolcurrent = rtde_r.get_tool_current()  # Get tool current
     timestamp = time.time()
     # Write to log file
     log_writer.writerow([timestamp] + joint_position + cartesian_position + joint_speeds + forces + [current])

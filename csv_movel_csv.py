@@ -6,8 +6,8 @@ from rtde_receive import RTDEReceiveInterface
 
 ROBOT_IP = '192.168.0.1'
 PORT = 30002
-CSV_FILE = 'points.csv'
-LOG_FILE = 'robot_current_consumption.csv'
+CSV_FILE = 'trajectories.csv'
+LOG_FILE = 'robot_data_current.csv'
 
 # Function to read points from a CSV file
 def read_points_from_csv(file_path):

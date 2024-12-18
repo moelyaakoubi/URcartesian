@@ -22,9 +22,12 @@ points = [point1,point2, point3,point4,point5,point6,point7,point8]
 def movej_command_joint(joints, a=1.4, v=1.05):
     return f"movej([{', '.join(map(str, joints))}], a={a}, v={v})\n"
 
+# Function to format the moveL command with pose (Cartesian point)
+def movel_command_cart(pose,a=1.4, v=1.05):
+    return f"movel(p[{', '.join(map(str, pose))}], a={a}, v={v})\n"
 
 # Function to format the movej command with pose (Cartesian point)
-def movej_command_cart(pose,a=1.4, v=1.05):
+def movej_command_cartesian(pose,a=1.4, v=1.05):
     return f"movej(p[{', '.join(map(str, pose))}], a={a}, v={v})\n"
 
 
@@ -50,7 +53,7 @@ try:
                 print("target",target)
             
 
-            command = movej_command_cart(start)
+            command = movej_command_cartesian(start)
             print(f"Sending command to move to point {i}: {command}")
             s.sendall(command.encode('utf-8'))
 

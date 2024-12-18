@@ -21,3 +21,7 @@ for i, point in enumerate(points):
             if i+1<len(points):
                 target=points[i+1]
                 print("target",target)
+
+
+
+

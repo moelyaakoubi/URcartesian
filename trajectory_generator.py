@@ -29,7 +29,7 @@ with open(file_name, mode='w', newline='', encoding='utf-8') as file:
                 point, 
                 x=(0.001 if idx in {1, 5} else None), 
                 y=(0.001 if idx in {1, 5} else None), 
-                z=0.001
+                z=(0.001 if idx in {1,2,4,5,6,8} else None)
             )
             writer.writerow([ *modified_point.to_tuple()])
 

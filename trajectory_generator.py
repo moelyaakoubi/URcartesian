@@ -23,7 +23,7 @@ with open(file_name, mode='w', newline='', encoding='utf-8') as file:
     writer.writerow(["X", "Y", "Z", "w", "p", "r"])
     
     # Generate trajectories
-    for i in range(2):
+    for i in range(4):
         for idx, point in enumerate(points, start=1):
             modified_point = CartesianPoint_class.generate_point_with_margin(
                 point, 

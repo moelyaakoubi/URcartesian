@@ -19,12 +19,12 @@ def read_points_from_csv(file_path):
             points.append([float(value) for value in row])
     return points
 
-# Function to format the movel command with pose (Cartesian point)
-def movel_command_cart(pose, a=1.4, v=1.05):
-    return f"movel(p[{', '.join(map(str, pose))}], a={a}, v={v})\n"
+# Function to format the movel command with pose (Cartesian point) a=1.2, v=0.25)
+def movel_command_cart(pose, a=1.2, v=0.7):
+    return f"movej(p[{', '.join(map(str, pose))}], a={a}, v={v})\n"
 
 # Function to calculate motion time for Cartesian points with x1-x2 values
-def calculate_motion_time(start, target, speed=1.05):
+def calculate_motion_time(start, target, speed=0.7):
     #start= [-0.05247, -0.2361, 0.36177, 1.111, 2.9, -0.107]
     #target= [-0.44061, -0.1536, 0.22177, 1.188, 3.029, 0.013]
     distances = [abs(target - start) for start, target in zip(start, target)]
@@ -32,7 +32,7 @@ def calculate_motion_time(start, target, speed=1.05):
     return max(distances) / speed
 
 # Function to calculate motion time for Cartesian points with euclidean distance
-def calculate_Euc_motion_time(start, target, speed=1.05):
+def calculate_Euc_motion_time(start, target, speed=0.7):
     from math import sqrt
     distance = sqrt(sum((t - s) ** 2 for s, t in zip(start[:3], target[:3])))  # Euclidean distance
     return distance / speed
@@ -41,13 +41,13 @@ def calculate_Euc_motion_time(start, target, speed=1.05):
 def log_data_values(rtde_r, log_writer):
     cartesian_position = rtde_r.getActualTCPPose()  # Current Cartesian pose
     joint_position = rtde_r.getActualQ()  # Current joint positions
-    joint_speeds = rtde_r.getActualQd()  # Joint velocities
-    forces = rtde_r.getActualTCPForce()  # TCP forces
-    current = rtde_r.getRobotCurrent()  # Robot's current consumption in amperes
-    #toolcurrent = rtde_r.get_tool_current()  # Get tool current
+    #joint_speeds = rtde_r.getActualQd()  # Joint velocities
+    #forces = rtde_r.getActualTCPForce()  # TCP forces
+    current = rtde_r.getActualCurrent()  # joint current consumption in amperes
+    voltage= rtde_r.getActualJointVoltage() # joint voltage
     timestamp = time.time()
     # Write to log file
-    log_writer.writerow([timestamp] + joint_position + cartesian_position + joint_speeds + forces + [current])
+    log_writer.writerow([timestamp] + joint_position + cartesian_position +current +voltage)
 
 try:
     points = read_points_from_csv(CSV_FILE)  # Read points from the CSV file
@@ -63,9 +63,9 @@ try:
             ["Timestamp"] + 
             [f"Joint_{i+1}" for i in range(6)] + 
             [f"Cartesian_{axis}" for axis in ["x", "y", "z", "rx", "ry", "rz"]] +
-            ["Current_Amperes"]+
-            [f"Joint_Speed_{i+1}" for i in range(6)] +
-            [f"Force_{axis}" for axis in ["fx", "fy", "fz", "tx", "ty", "tz"]]
+            [f"Current_{i+1}" for i in range(6)]+
+            [f"Voltage_{i+1}" for i in range(6)]
+
         )
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -93,7 +93,12 @@ try:
                     while time.time() - start_time < motion_time + 2:
                         log_data_values(rtde_r, log_writer)
                         time.sleep(0.1)  # Log data at 10 Hz
+
+
                 else:
+                    command = movel_command_cart(target)
+                    print(f"Sending command to move to point {i+1}: {command}")
+                    s.sendall(command.encode('utf-8'))
                     print("No next target, motion sequence complete.")
 
             print("All motions completed.")

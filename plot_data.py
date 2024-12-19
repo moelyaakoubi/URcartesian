@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 def read_log_data(file_path):
     timestamps = []
     joint_positions = [[] for _ in range(6)]
-    cartesian_positions = [[], [], []]  # x, y, z
-    current_data = []
-    force_data = [[] for _ in range(6)]  # fx, fy, fz, tx, ty, tz
+    cartesian_positions = [[] for _ in range(6)]
+    current_data = [[] for _ in range(6)]
+    voltage_data = [[] for _ in range(6)]  
 
     with open(file_path, mode='r') as file:
         reader = csv.reader(file)
@@ -20,31 +20,30 @@ def read_log_data(file_path):
             for i in range(6):
                 joint_positions[i].append(float(row[i + 1]))
 
-            for i, axis in enumerate(["x", "y", "z"]):
+            for i, axis in enumerate(["x", "y", "z","r","w","p"]):
                 cartesian_positions[i].append(float(row[i + 7]))
 
-            current_data.append(float(row[13]))  # Current in amperes
-
             for i in range(6):
-                force_data[i].append(float(row[14 + i]))  # Forces
+                current_data[i].append(float(row[14 + i])) 
+            
+            for i in range(6):
+                voltage_data[i].append(float(row[19 + i]))
 
-    return timestamps, joint_positions, cartesian_positions, current_data, force_data
+    return timestamps, joint_positions, cartesian_positions, current_data,voltage_data
 
 # Function to plot Cartesian positions (x, y, z) over time
 def plot_cartesian_positions(timestamps, cartesian_positions):
-    plt.figure(figsize=(12, 6))
-    plt.subplot(2, 1, 1)
-    plt.plot(timestamps, cartesian_positions[0], label="X position", color='r')
-    plt.plot(timestamps, cartesian_positions[1], label="Y position", color='g')
-    plt.plot(timestamps, cartesian_positions[2], label="Z position", color='b')
+    plt.subplot(3,1, 1)
+    for i, joint in enumerate(cartesian_positions):
+        plt.plot(timestamps, joint, label=f"cartesian {i + 1}")
     plt.xlabel("Time (seconds)")
-    plt.ylabel("Position (meters)")
-    plt.title("Cartesian Positions Over Time")
+    plt.ylabel("cartesian Position ")
+    plt.title("cartesian Over Time")
     plt.legend()
 
-# Function to plot joint positions over time
+
 def plot_joint_positions(timestamps, joint_positions):
-    plt.subplot(2, 1, 2)
+    plt.subplot(3, 1, 2)
     for i, joint in enumerate(joint_positions):
         plt.plot(timestamps, joint, label=f"Joint {i + 1}")
     plt.xlabel("Time (seconds)")
@@ -52,43 +51,42 @@ def plot_joint_positions(timestamps, joint_positions):
     plt.title("Joint Positions Over Time")
     plt.legend()
 
-# Function to plot current consumption over time
-def plot_current_consumption(timestamps, current_data):
-    plt.figure(figsize=(12, 6))
-    plt.plot(timestamps, current_data, label="Current Consumption", color='m')
+
+def plot_current(timestamps, current_data):
+    plt.subplot(3, 1, 3)
+    for i, joint in enumerate(current_data):
+        plt.plot(timestamps, joint, label=f"Curent {i + 1}")
     plt.xlabel("Time (seconds)")
-    plt.ylabel("Current (Amps)")
-    plt.title("Robot Current Consumption Over Time")
+    plt.ylabel("joint current")
+    plt.title("joint current Over Time")
     plt.legend()
 
-# Function to plot forces (fx, fy, fz, tx, ty, tz) over time
-def plot_forces(timestamps, force_data):
-    force_labels = ["fx", "fy", "fz", "tx", "ty", "tz"]
-    plt.figure(figsize=(12, 6))
-    for i, force in enumerate(force_data):
-        plt.plot(timestamps, force, label=force_labels[i])
+
+def plot_voltage(timestamps, voltage_data):
+    plt.subplot(4, 2, 2)
+    for i, joint in enumerate(voltage_data):
+        plt.plot(timestamps, joint, label=f"voltage {i + 1}")
     plt.xlabel("Time (seconds)")
-    plt.ylabel("Force (N / Nm)")
-    plt.title("TCP Forces Over Time")
+    plt.ylabel("voltage")
+    plt.title("voltage Over Time")
     plt.legend()
+
+
 
 # Main function to read the log data and plot the results
 def plot_robot_data(log_file):
-    timestamps, joint_positions, cartesian_positions, current_data, force_data = read_log_data(log_file)
+    timestamps, joint_positions, cartesian_positions, current_data,voltage_data = read_log_data(log_file)
 
     # Plot Cartesian positions (x, y, z)
-    #plot_cartesian_positions(timestamps, cartesian_positions)
+    plot_cartesian_positions(timestamps, cartesian_positions)
 
-    # Plot joint positions
-    #plot_joint_positions(timestamps, joint_positions)
+    plot_joint_positions( timestamps,joint_positions)
 
-    # Plot current consumption
-    plot_current_consumption(timestamps, current_data)
+    plot_current(timestamps,current_data)
 
-    # Plot forces
-    #plot_forces(timestamps, force_data)
+    #plot_voltage(timestamps,voltage_data)
 
-    # Show all plots
+
     plt.tight_layout()
     plt.show()
 
